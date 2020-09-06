@@ -1,2 +1,2 @@
-# ping-pong-game-
-ping-pong-game javascript
+# ping-pong-game
+Code ping pong game using javascript
