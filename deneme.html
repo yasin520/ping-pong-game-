@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    body{
+        margin:0;
+        padding: 0;
+    }
+</style>
+</head>
+<body>
+    <canvas id="game" width="600" height="400" style="border:1px solid black"></canvas>
+  
+
+    <script>
+
+    class pinpon {
+      constructor() {
+        this.canvas = document.getElementById('game');
+        this.context = this.canvas.getContext('2d');
+        
+
+        
+      }
+      
+        
+      
+      update(){
+        this.canvas.addEventListener("mousemove",(event) =>{
+            
+            this.mouseX  = event.clientX;
+            this.mouseY  = event.clientY;
+            this.kareY = this.mouseY;
+            if(this.mouseY > 320){
+                this.kareY = 320;
+            }
+        });
+        this.canvas.addEventListener("mousepress",(event) =>{
+            
+            this.mouseX  = event.clientX;
+            this.mouseY  = event.clientY;
+            this.kareY = this.mouseY;
+            if(this.mouseY > 320){
+                this.kareY = 320;
+            }
+        });
+        this.cricleX += this.ballX;
+        this.cricleY += this.ballY;
+        if(this.cricleY + 10 > 400 || this.cricleY - 10 < 0){
+            this.ballY = -this.ballY;
+        }
+        this.pcY += (this.cricleY - (this.pcY + 40)) * 0.1;
+
+
+        this.balltop = this.cricleY - 10;
+        this.ballbottom = this.cricleY + 10;
+        this.ballleft = this.cricleX - 10;
+        this.ballright = this.cricleX + 10;
+        
+        this.karetop = this.kareY;
+        this.karebottom = this.kareY + 80;
+        this.kareright = this.kareX + 15;
+        this.kareleft = this.kareX;
+
+        this.pctop = this.pcY;
+        this.pcbottom = this.pcY + 80;
+        this.pcright = this.pcX + 15;
+        this.pcleft = this.pcX;
+
+        this.colidepointpc = this.cricleY -(this.pcY + 40);
+          this.colidepointpc = this.colidepointpc / 40;
+          this.angleRadpc = Math.PI/4;
+          this.bounceanglepc = this.colidepointpc * this.angleRadpc;
+
+          this.colidepoint = this.cricleY -(this.kareY + 40);
+          this.colidepoint = this.colidepoint / 40;
+          this.angleRad = Math.PI/4;
+          this.bounceangle = this.colidepoint * this.angleRad; 
+
+        if(this.ballleft > this.pcright){
+            
+            this.restart();
+            
+
+        }
+        if(this.ballright < this.kareX){
+           
+           this.restart();
+           
+        }
+        
+        
+        
+        if(this.ballleft < this.kareright && this.ballbottom > this.karetop && this.balltop < this.karebottom && this.kareleft < this.ballright == true){
+          
+          this.ballX =  this.ballspeed * Math.cos(this.bounceangle);
+          this.ballY = this.ballspeed * Math.sin(this.bounceangle);
+          this.ballspeed += 0.5;
+
+        }
+        if(this.ballleft < this.pcright && this.ballbottom > this.pctop && this.balltop < this.pcbottom && this.pcleft < this.ballright == true){
+
+          this.ballspeed += 0.5;
+          this.ballX = -this.ballspeed * Math.cos(this.bounceanglepc);
+          this.ballY = this.ballspeed * Math.sin(this.bounceanglepc);
+          
+           
+         }
+        
+        
+      }
+        
+      
+      draw() {
+          
+        this.clear();
+        this.context.fillText(this.karescore,150,60);
+        this.context.fillText(this.pcscore,450,60);
+        this.context.font = "30px Arial";
+        this.context.fillRect(this.kareX, this.kareY, 15, 80);
+        this.context.fillRect(this.pcX, this.pcY, 15, 80);
+        this.context.beginPath();
+        this.context.arc(this.cricleX,this.cricleY,10,0,5*Math.PI);
+        this.context.stroke();
+      }
+      
+      
+      init(){
+        this.karescore = 0;
+        this.pcscore = 0;
+        this.ballspeed = 5;
+        this.level = 0.1;
+        this.kareX = 10;
+        this.ballX = 3;
+        this.ballY = 4;
+        this.pcX = 570;
+        this.pcY = 160;
+        this.cricleX = 300;
+        this.cricleY = 200;
+
+        //this.canvas.addEventListener("mouseenter",this.update);
+        this.kareY = 160;
+        this.timer = setInterval(this.loop.bind(this), 1000 / 50);//loop fonksiyonu burda çalıştı.
+                                                                //loop fonksiyonuda draw fonksiyonunu çağırdığı için draw fonsiyonuda calşıyor.
+      }
+      
+      loop(){
+        this.draw();
+        this.update();
+        
+      }
+      clear(){
+        this.context.clearRect(0, 0, 600, 400);
+      }
+      restart(){
+        clearInterval(this.timer);
+        
+        this.init();
+      
+      }
+    }
+    
+    // Yeni oyun oluştur:
+    const game = new pinpon();
+      
+    // Sayfa yüklendiğinde oyunu oynanabilir hale getir:
+    window.onload = () => game.init();
+    </script>
+
+
+</body>
+</html>
